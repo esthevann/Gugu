@@ -9,7 +9,7 @@ export const guguRouter = createRouter()
             input: z.object({
                 text: z.string()
             }),
-            async resolve({ ctx, input }) { 
+            async resolve({ ctx, input }) {
                 if (!ctx.session || !ctx.session.user) {
                     throw new TRPCError({ code: "UNAUTHORIZED" });
                 }
@@ -38,7 +38,7 @@ export const guguRouter = createRouter()
         }
     )
     .query("listAllGugus", {
-        async resolve({ ctx }){
-            return await ctx.prisma.gugu.findMany({include: {user: true}});
+        async resolve({ ctx }) {
+            return await ctx.prisma.gugu.findMany({ include: { user: true } });
         }
     })

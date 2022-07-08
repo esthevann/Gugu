@@ -24,4 +24,11 @@ export const userRouter = createRouter()
                 throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
             }
         }
+    })
+    .query("getUser", {
+        input: z.string(),
+        async resolve({ ctx, input }) {
+           let user = await ctx.prisma.user.findFirst({ where: { email: input } })
+           return user
+        }
     });

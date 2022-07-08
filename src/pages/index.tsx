@@ -7,31 +7,55 @@ import { Sidebar } from '../components/Sidebar';
 import { Session, unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "./api/auth/[...nextauth]";
 import { useSession } from "next-auth/react";
+import { Gugu, User } from "@prisma/client";
+import { createSSGHelpers } from '@trpc/react/ssg';
+import { appRouter } from "../server/router";
+import  superjson  from 'superjson';
+import { prisma } from '../server/db/client';
 
-// @ts-ignore
-export const getServerSideProps: GetServerSideProps<Session> = async (context) => {
-    const session = await getServerSession(context.req, context.res, nextAuthOptions);
-
-    if (!session) {
-      return {
-        redirect: {
-          destination: "/api/auth/signin",
-          permanent: false,
-        }
-      }
-      
-    }
-
-    return {
-      props: {
-        session
-      }
-    }
+interface Props  {
+  session: Session;
 }
 
-const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props) => {
+// @ts-ignore
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, nextAuthOptions);
 
-  const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      }
+    }
+  }
+
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    // @ts-ignore
+    ctx: {
+      session: session,
+      prisma,
+    },
+    transformer: superjson,
+  });
+
+   await ssg.fetchQuery('gugu.listAllGugus')
+
+  return {
+    props: {
+      session,
+      trpc: ssg.dehydrate(),
+    }
+  }
+}
+
+// @ts-ignore
+const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props: Props) => {
+
+  const { data: gugus } = trpc.useQuery(["gugu.listAllGugus"]);
+
+
   return (
     <>
       <Head>
@@ -41,13 +65,13 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       </Head>
       <div className='flex flex-col min-h-screen'>
 
-      <div className='flex flex-grow'>
+        <div className='flex flex-grow'>
           <Sidebar />
-          <Feed />
+          <Feed gugus={gugus} />
           <Rightbar />
+        </div>
+
       </div>
-      
-    </div>
     </>
   );
 };
