@@ -1,6 +1,5 @@
 import { createRouter } from "./context";
 import { z } from 'zod';
-import { trpc } from "../../utils/trpc";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@prisma/client";
 
@@ -38,3 +37,8 @@ export const guguRouter = createRouter()
             }
         }
     )
+    .query("listAllGugus", {
+        async resolve({ ctx }){
+            return await ctx.prisma.gugu.findMany({include: {user: true}});
+        }
+    })

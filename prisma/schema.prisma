@@ -46,6 +46,8 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
+    handle        String?   @unique
+    fullyCreated  Boolean   @default(false)
     image         String?
     accounts      Account[]
     sessions      Session[]

@@ -7,7 +7,7 @@ export function PostForm() {
 
     const [text, setText] = useState("");
     const utils = trpc.useContext();
-    const guguMutation = trpc.useMutation("gugucreateGugu", {onSuccess: (data) => {
+    const guguMutation = trpc.useMutation("gugu.createGugu", {onSuccess: (data) => {
         console.log(data);
         //utils.invalidateQueries("gugu");
     }})
