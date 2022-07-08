@@ -1,4 +1,5 @@
 import Image from "next/future/image";
+import { format } from 'date-fns'
 
 interface GuguProps {
     img: string,
@@ -9,6 +10,7 @@ interface GuguProps {
 }
 
 export function Gugu(props: GuguProps) {
+    const date = format(props.createdAt, 'dd/MM/yyyy')
     return (
         <div className="px-6 py-3 border border-gray-500 rounded-md max-w-fit">
             <div className="flex gap-2">
@@ -19,7 +21,7 @@ export function Gugu(props: GuguProps) {
                         <div className="flex gap-1 text-gray-600">
                             <p>@{props.handle}</p>
                             ·
-                            <p>{props.createdAt.toString()}</p>
+                            <p>{date}</p>
                         </div>
 
                     </div>
