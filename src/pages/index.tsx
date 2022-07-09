@@ -10,10 +10,10 @@ import { useSession } from "next-auth/react";
 import { Gugu, User } from "@prisma/client";
 import { createSSGHelpers } from '@trpc/react/ssg';
 import { appRouter } from "../server/router";
-import  superjson  from 'superjson';
+import superjson from 'superjson';
 import { prisma } from '../server/db/client';
 
-interface Props  {
+interface Props {
   session: Session;
 }
 
@@ -21,14 +21,33 @@ interface Props  {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, nextAuthOptions);
 
-  if (!session) {
+  if (!session || !session.user?.email) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination: '/api/auth/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  const isUserFullyRegistered = await prisma.user.findUnique({
+    where: {
+      email: session.user.email
+    },
+    select: {
+      fullyCreated: true
+    }
+  });
+
+  if (isUserFullyRegistered?.fullyCreated === false) {
+    return {
+      redirect: {
+        destination: "/auth/new-user",
         permanent: false,
       }
     }
   }
+
 
   const ssg = createSSGHelpers({
     router: appRouter,
@@ -40,7 +59,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     transformer: superjson,
   });
 
-   await ssg.fetchQuery('gugu.listAllGugus')
+  await ssg.fetchQuery('gugu.listAllGugus')
 
   return {
     props: {

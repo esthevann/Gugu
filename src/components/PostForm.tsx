@@ -9,7 +9,7 @@ export function PostForm() {
     const utils = trpc.useContext();
     const guguMutation = trpc.useMutation("gugu.createGugu", {onSuccess: (data) => {
         console.log(data);
-        //utils.invalidateQueries("gugu");
+        utils.invalidateQueries("gugu.listAllGugus");
     }})
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
