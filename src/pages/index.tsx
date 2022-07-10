@@ -12,6 +12,7 @@ import { createSSGHelpers } from '@trpc/react/ssg';
 import { appRouter } from "../server/router";
 import superjson from 'superjson';
 import { prisma } from '../server/db/client';
+import {ssg_helper} from '../utils/ssg-helper';
 
 interface Props {
   session: Session;
@@ -49,15 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
 
-  const ssg = createSSGHelpers({
-    router: appRouter,
-    // @ts-ignore
-    ctx: {
-      session: session,
-      prisma,
-    },
-    transformer: superjson,
-  });
+  const ssg = ssg_helper(session);
 
   await ssg.fetchQuery('gugu.listAllGugus')
 

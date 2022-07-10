@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import { User, House } from 'phosphor-react';
+import { User, House, SignOut } from 'phosphor-react';
+import { signOut } from "next-auth/react";
 
 export function Sidebar() {
     return (
@@ -29,6 +30,7 @@ export function Sidebar() {
                 </ul>
             </aside>                    
             <div className="flex items-center gap-2 pb-5 pl-32">
+                <button onClick={() => signOut()} className='flex gap-2'> <SignOut size={24}/> Sign out</button>
             </div>
         </div>
 

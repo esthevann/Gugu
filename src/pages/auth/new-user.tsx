@@ -82,7 +82,7 @@ export default function NewUser() {
                         <input type="text" className="p-1 bg-zinc-900" value={`@${text}`} onChange={(e) => setText(e.target.value.slice(1))} />
                     </label>
                     <div className="pb-4"></div>
-                    <button type="submit" className="px-4 py-2 transition-colors bg-blue-500 rounded-full hover:bg-blue-600"> Enviar </button>
+                    <button disabled={addHandleMutation.isLoading} type="submit" className="px-4 py-2 transition-colors bg-blue-500 rounded-full hover:bg-blue-600"> Enviar </button>
                     <div className="pb-4"></div>
                     {error && <p className="text-red-500">{error}</p>}
                 </div>

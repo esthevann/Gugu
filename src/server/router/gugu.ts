@@ -39,6 +39,7 @@ export const guguRouter = createRouter()
     )
     .query("listAllGugus", {
         async resolve({ ctx }) {
-            return await ctx.prisma.gugu.findMany({ include: { user: true } });
+            let d = await ctx.prisma.gugu.findMany({ include: { user: true } });
+            return d
         }
     })

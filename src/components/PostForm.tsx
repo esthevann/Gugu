@@ -1,10 +1,10 @@
+import { useSession } from "next-auth/react";
 import Image from "next/future/image";
 import { FormEvent, useState } from "react";
 import gugu from "../../public/gugu.png";
 import { trpc } from "../utils/trpc";
 
 export function PostForm() {
-
     const [text, setText] = useState("");
     const utils = trpc.useContext();
     const guguMutation = trpc.useMutation("gugu.createGugu", {onSuccess: (data) => {
@@ -16,12 +16,16 @@ export function PostForm() {
         guguMutation.mutate({ text });
         setText("");
     }
+    const session = useSession();
+
+    const userImage = session?.data?.user?.image || gugu;
+    
     return (
         <form action="" className="flex flex-col" onSubmit={handleSubmit}>
         <div className="flex flex-col">
             <div className="flex justify-start gap-5">
                 <div >
-                    <Image src={gugu} alt="" className="w-12 h-12 rounded-full " />
+                    <Image src={userImage} alt="" className="w-12 h-12 rounded-full " />
                 </div>
                 <textarea onChange={(e) => setText(e.target.value)} value={text} spellCheck={false} cols={30} rows={3} maxLength={4} className="p-1.5 bg-zinc-900" name="gugu" />
             </div>
