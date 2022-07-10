@@ -6,11 +6,6 @@ import Rightbar from '../components/Rightbar';
 import { Sidebar } from '../components/Sidebar';
 import { Session, unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "./api/auth/[...nextauth]";
-import { useSession } from "next-auth/react";
-import { Gugu, User } from "@prisma/client";
-import { createSSGHelpers } from '@trpc/react/ssg';
-import { appRouter } from "../server/router";
-import superjson from 'superjson';
 import { prisma } from '../server/db/client';
 import {ssg_helper} from '../utils/ssg-helper';
 

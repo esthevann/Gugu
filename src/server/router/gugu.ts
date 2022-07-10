@@ -14,6 +14,10 @@ export const guguRouter = createRouter()
                     throw new TRPCError({ code: "UNAUTHORIZED" });
                 }
 
+                if (input.text.length > 4){
+                    throw new TRPCError({ code: "BAD_REQUEST" });
+                }
+
                 const userSelection = Prisma.validator<Prisma.UserSelect>()({
                     id: true,
                     Gugu: true
