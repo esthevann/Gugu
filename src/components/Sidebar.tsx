@@ -22,7 +22,7 @@ export function Sidebar(props: SidebarProps) {
                             </a>
                         </Link>
                     </li>
-                    <li className="flex px-2 py-1 rounded-full hover:bg-gray-500 hover:">
+                    <li className="flex px-2 py-1 rounded-full hover:bg-gray-500 ">
                         <Link href={profilePath} >
                             <a className="flex items-center gap-2 text-xl" >
                                 <User size={24} />
