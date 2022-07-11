@@ -8,6 +8,7 @@ import { Sidebar } from "../../components/Sidebar";
 import { trpc } from "../../utils/trpc";
 import { ssg_helper } from '../../utils/ssg-helper';
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
+import UserContent from "../../components/UserContent";
 
 
 export default function UserPage() {
@@ -32,10 +33,7 @@ export default function UserPage() {
 
                 <div className='flex flex-grow'>
                     <Sidebar handle={"/"}/>
-                    <h1>{data?.email}</h1>
-                    {
-                        //<Feed gugus={gugus} />}
-                    }
+                    <UserContent img={data.image!} gugus={data.Gugu}/>
                     <Rightbar />
                 </div>
 

@@ -1,10 +1,12 @@
 import { createRouter } from "./context";
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
-import type { Gugu,    User } from "@prisma/client";
-import {Prisma} from "@prisma/client";
+import type { Gugu, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
-export type UserWithGugus = (User & { Gugu: Gugu[]; }) | null
+export type UserWithGugus = (User & { Gugu: (Gugu & {
+    user: User;
+})[]; }) | null
 
 export const userRouter = createRouter()
     .mutation("addHandle", {
@@ -30,14 +32,23 @@ export const userRouter = createRouter()
     .query("getUserByEmail", {
         input: z.string(),
         async resolve({ ctx, input }) {
-           let user = await ctx.prisma.user.findFirst({ where: { email: input }, include: {Gugu: true} })
-           return user
+            let user = await ctx.prisma.user.findFirst({ where: { email: input }, include: { Gugu: true } })
+            return user
         }
     })
     .query("getUserByHandle", {
         input: z.string(),
         async resolve({ ctx, input }) {
-           let user: UserWithGugus | null = await ctx.prisma.user.findFirst({where: { handle: input }, include: {Gugu: true}})
-           return user
+            let user: UserWithGugus | null = await ctx.prisma.user.findFirst({
+                where: { handle: input },
+                include: {
+                    Gugu: {
+                        include: {
+                            user: true
+                        }
+                    }
+                }
+            });
+            return user
         }
     });
