@@ -14,7 +14,7 @@ export function Sidebar(props: SidebarProps) {
                 <h2 className="text-2xl font-bold">Gugu</h2>
                 <div className="pb-1"></div>
                 <ul className="flex flex-col gap-2">
-                    <li className="flex ">
+                    <li className="flex px-2 py-1 rounded-full hover:bg-gray-500">
                         <Link href={"/"}>
                             <a className="flex items-center gap-2 text-xl" >
                                 <House size={24} />
@@ -22,7 +22,7 @@ export function Sidebar(props: SidebarProps) {
                             </a>
                         </Link>
                     </li>
-                    <li className="flex ">
+                    <li className="flex px-2 py-1 rounded-full hover:bg-gray-500 hover:">
                         <Link href={profilePath} >
                             <a className="flex items-center gap-2 text-xl" >
                                 <User size={24} />
@@ -31,7 +31,7 @@ export function Sidebar(props: SidebarProps) {
                         </Link>
                     </li>
                     <li className="flex">
-                        <button onClick={() => signOut()} className='flex items-center gap-2 text-xl'> <SignOut size={24}/> Sign out</button>
+                        <button onClick={() => signOut()} className='flex items-center gap-2 px-2 py-1 text-xl rounded-full hover:bg-gray-500'> <SignOut size={24}/> Sign out</button>
                     </li>
 
                 </ul>
