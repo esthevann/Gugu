@@ -15,7 +15,7 @@ interface FeedProps {
 
 export default function Feed(props: FeedProps) {
     return (
-        <div className="flex flex-col flex-1 pl-12">
+        <div className="flex flex-col flex-1 pl-12 overflow-y-auto">
             <div className="flex flex-col items-center pl-12">
                 <div className="pb-6"></div>
                 <PostForm />

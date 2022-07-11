@@ -1,9 +1,13 @@
-import { NextPage } from "next";
 import Link from "next/link";
 import { User, House, SignOut } from 'phosphor-react';
 import { signOut } from "next-auth/react";
 
-export function Sidebar() {
+interface SidebarProps {
+    handle: string | null | undefined;
+}
+
+export function Sidebar(props: SidebarProps) {
+    const profilePath = props.handle ? `/profile/${props.handle}` : "#";
     return (
         <div className="flex flex-col border-r-2 border-gray-800">
             <aside className="flex-1 pt-12 pl-32 pr-6 ">
@@ -11,7 +15,7 @@ export function Sidebar() {
                 <div className="pb-1"></div>
                 <ul className="flex flex-col gap-2">
                     <li className="flex ">
-                        <Link href={"#"}>
+                        <Link href={"/"}>
                             <a className="flex items-center gap-2 text-xl" >
                                 <House size={24} />
                                 Página Inicial
@@ -19,7 +23,7 @@ export function Sidebar() {
                         </Link>
                     </li>
                     <li className="flex ">
-                        <Link href={"#"} >
+                        <Link href={profilePath} >
                             <a className="flex items-center gap-2 text-xl" >
                                 <User size={24} />
                                 Perfil

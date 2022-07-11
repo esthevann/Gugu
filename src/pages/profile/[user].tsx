@@ -31,7 +31,7 @@ export default function UserPage() {
             <div className='flex flex-col min-h-screen'>
 
                 <div className='flex flex-grow'>
-                    <Sidebar />
+                    <Sidebar handle={"/"}/>
                     <h1>{data?.email}</h1>
                     {
                         //<Feed gugus={gugus} />}
