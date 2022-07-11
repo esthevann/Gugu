@@ -33,7 +33,7 @@ export default function UserPage() {
 
                 <div className='flex flex-grow'>
                     <Sidebar handle={"/"}/>
-                    <UserContent img={data.image!} gugus={data.Gugu}/>
+                    <UserContent user={data}/>
                     <Rightbar />
                 </div>
 
