@@ -76,7 +76,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       </Head>
       <div className='flex flex-col min-h-screen'>
 
-        <div className='flex flex-grow h-full overflow-hidden'>
+        <div className='flex flex-grow h-full '>
           <Sidebar handle={user?.handle}/>
           <Feed gugus={gugus} />
           <Rightbar />

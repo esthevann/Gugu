@@ -30,12 +30,12 @@ export function Sidebar(props: SidebarProps) {
                             </a>
                         </Link>
                     </li>
+                    <li className="flex">
+                        <button onClick={() => signOut()} className='flex items-center gap-2 text-xl'> <SignOut size={24}/> Sign out</button>
+                    </li>
 
                 </ul>
             </aside>                    
-            <div className="flex items-center gap-2 pb-5 pl-32">
-                <button onClick={() => signOut()} className='flex gap-2'> <SignOut size={24}/> Sign out</button>
-            </div>
         </div>
 
     )
