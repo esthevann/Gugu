@@ -9,6 +9,7 @@ import { trpc } from "../../utils/trpc";
 import { ssg_helper } from '../../utils/ssg-helper';
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
 import UserContent from "../../components/UserContent";
+import Spinner from "../../components/Spinner";
 
 
 export default function UserPage() {
@@ -16,8 +17,8 @@ export default function UserPage() {
 
     const { user } = useRouter().query as { user: string };
 
-    const { data: pageUserData } = trpc.useQuery(["user.getUserByHandle", user]);
-    const { data: sessionUserData } = trpc.useQuery(["user.getUserByEmail", session?.data?.user?.email || ""]);
+    const { data: pageUserData, isLoading: IsPageDataLoading } = trpc.useQuery(["user.getUserByHandle", user]);
+    const { data: sessionUserData, isLoading: IsSessionLoading } = trpc.useQuery(["user.getUserByEmail", session?.data?.user?.email || ""]);
 
     if (!pageUserData) {
         return null;
@@ -33,8 +34,9 @@ export default function UserPage() {
             <div className='flex flex-col min-h-screen'>
 
                 <div className='flex flex-grow'>
-                    <Sidebar handle={sessionUserData?.handle}/>
-                    <UserContent user={pageUserData}/>
+                    {IsPageDataLoading || IsSessionLoading  && <Spinner />}
+                    {sessionUserData && <Sidebar handle={sessionUserData.handle} />}
+                    {pageUserData && <UserContent user={pageUserData} />}
                     <Rightbar />
                 </div>
 

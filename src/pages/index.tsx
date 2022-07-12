@@ -7,8 +7,9 @@ import { Sidebar } from '../components/Sidebar';
 import { Session, unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "./api/auth/[...nextauth]";
 import { prisma } from '../server/db/client';
-import {ssg_helper} from '../utils/ssg-helper';
+import { ssg_helper } from '../utils/ssg-helper';
 import { useSession } from "next-auth/react";
+import Spinner from "../components/Spinner";
 
 interface Props {
   session: Session;
@@ -64,7 +65,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
   const session = useSession();
 
-  const { data: gugus } = trpc.useQuery(["gugu.listAllGugus"]);
+  const { data: gugus, isLoading } = trpc.useQuery(["gugu.listAllGugus"]);
   const { data: user } = trpc.useQuery(["user.getUserByEmail", session!.data!.user!.email!]);
 
   return (
@@ -77,8 +78,9 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       <div className='flex flex-col min-h-screen'>
 
         <div className='flex flex-grow h-full '>
-          <Sidebar handle={user?.handle}/>
-          <Feed gugus={gugus} />
+          <Sidebar handle={user?.handle} />
+          {isLoading && <Spinner />}
+          {gugus && <Feed gugus={gugus} />}
           <Rightbar />
         </div>
 
