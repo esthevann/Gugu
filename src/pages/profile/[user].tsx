@@ -16,24 +16,25 @@ export default function UserPage() {
 
     const { user } = useRouter().query as { user: string };
 
-    const { data } = trpc.useQuery(["user.getUserByHandle", user]);
+    const { data: pageUserData } = trpc.useQuery(["user.getUserByHandle", user]);
+    const { data: sessionUserData } = trpc.useQuery(["user.getUserByEmail", session?.data?.user?.email || ""]);
 
-    if (!data) {
+    if (!pageUserData) {
         return null;
     }
 
     return (
         <>
             <Head>
-                <title>{data?.name} - @{data.handle}</title>
+                <title>{pageUserData?.name} - @{pageUserData.handle}</title>
                 <link rel="shortcut icon" href='/favicon.ico?' type="image/x-icon" />
                 <meta name="description" content="Gugu microblogging platform" />
             </Head>
             <div className='flex flex-col min-h-screen'>
 
                 <div className='flex flex-grow'>
-                    <Sidebar handle={"/"}/>
-                    <UserContent user={data}/>
+                    <Sidebar handle={sessionUserData?.handle}/>
+                    <UserContent user={pageUserData}/>
                     <Rightbar />
                 </div>
 
