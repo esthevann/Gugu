@@ -52,6 +52,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     Gugu          Gugu[]
+    Bio           String    @default("")
 }
 
 model Gugu {
