@@ -18,7 +18,7 @@ export default function UserPage() {
     const { user } = useRouter().query as { user: string };
 
     const { data: pageUserData, isLoading: IsPageDataLoading } = trpc.useQuery(["user.getUserByHandle", user]);
-    const { data: sessionUserData, isLoading: IsSessionLoading } = trpc.useQuery(["user.getUserByEmail", session?.data?.user?.email || ""]);
+    const { data: sessionUserData, isLoading: IsSessionLoading } = trpc.useQuery(["user.getUserById", session?.data?.user?.id || ""]);
 
     if (!pageUserData) {
         return null;

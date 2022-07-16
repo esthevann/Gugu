@@ -29,6 +29,13 @@ export const userRouter = createRouter()
             }
         }
     })
+    .query("getUserById", {
+        input: z.string(),
+        async resolve({ ctx, input }){
+            let user = await ctx.prisma.user.findUnique({ where: { id: input }, include: { Gugu: true } })
+            return user
+        }
+    })
     .query("getUserByEmail", {
         input: z.string(),
         async resolve({ ctx, input }) {

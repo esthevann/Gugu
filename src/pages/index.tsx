@@ -19,7 +19,7 @@ interface Props {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, nextAuthOptions);
 
-  if (!session || !session.user?.email) {
+  if (!session || !session.user?.id) {
     return {
       redirect: {
         destination: '/api/auth/signin',
@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const isUserFullyRegistered = await prisma.user.findUnique({
     where: {
-      email: session.user.email
+      id: session.user.id
     },
     select: {
       fullyCreated: true
@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const ssg = ssg_helper(session);
 
   await ssg.fetchQuery('gugu.listAllGugus');
-  await ssg.fetchQuery("user.getUserByEmail", session.user.email);
+  await ssg.fetchQuery("user.getUserById", session.user.id);
 
   return {
     props: {
@@ -66,7 +66,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   const session = useSession();
 
   const { data: gugus, isLoading } = trpc.useQuery(["gugu.listAllGugus"]);
-  const { data: user } = trpc.useQuery(["user.getUserByEmail", session!.data!.user!.email!]);
+  const { data: user } = trpc.useQuery(["user.getUserById", session?.data?.user?.id || ""]);
 
   return (
     <>
