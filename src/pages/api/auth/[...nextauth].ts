@@ -25,6 +25,14 @@ export const authOptions: NextAuthOptions = {
     newUser: '/auth/new-user',
     //signIn: "/auth/signin"
   },
+  callbacks: {
+    session({session, user}){
+      if (session.user) {
+        session.user.id = user.id;
+      }
+      return session
+    },
+  },
   debug: true
 };
 
