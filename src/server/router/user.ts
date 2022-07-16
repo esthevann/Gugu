@@ -13,11 +13,11 @@ export const userRouter = createRouter()
         input: z.string(),
         async resolve({ ctx, input }) {
             let user = ctx.session?.user;
-            if (!user || !user.email) throw new TRPCError({ code: "FORBIDDEN" });
+            if (!user || !user.id) throw new TRPCError({ code: "FORBIDDEN" });
 
             try {
                 await ctx.prisma.user.update({
-                    where: { email: user.email },
+                    where: { id: user.id },
                     data: { handle: input, fullyCreated: true },
                     select: { fullyCreated: true }
                 });
@@ -39,14 +39,14 @@ export const userRouter = createRouter()
     .query("getUserByEmail", {
         input: z.string(),
         async resolve({ ctx, input }) {
-            let user = await ctx.prisma.user.findFirst({ where: { email: input }, include: { Gugu: true } })
+            let user = await ctx.prisma.user.findUnique({ where: { email: input }, include: { Gugu: true } })
             return user
         }
     })
     .query("getUserByHandle", {
         input: z.string(),
         async resolve({ ctx, input }) {
-            let user: UserWithGugus | null = await ctx.prisma.user.findFirst({
+            let user: UserWithGugus | null = await ctx.prisma.user.findUnique({
                 where: { handle: input },
                 include: {
                     Gugu: {
