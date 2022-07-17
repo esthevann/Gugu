@@ -17,7 +17,7 @@ export default function UserContent(props: UserContentProps) {
                 <Image src={props.user.image!} alt={`${props.user.name} profile photo`} 
                     className="w-32 h-32 rounded-full"/>
                 <div >
-                    <h2 className="text-xl font-bold">{props.user.name} - {props.user.handle}</h2>
+                    <h2 className="text-xl font-bold">{props.user.name} - @{props.user.handle}</h2>
                     <p className="w-[52rem] ">{props.user.Bio}</p>
                 </div>
             </div>

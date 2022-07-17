@@ -1,6 +1,7 @@
 import { User } from "@prisma/client";
 import Image from "next/future/image";
 import { useState } from "react";
+import { trpc } from "../utils/trpc";
 
 interface EditFormProps {
     handle: string;
@@ -11,9 +12,22 @@ export default function EditForm(props: EditFormProps) {
     let [name, setName] = useState(props.user.name || "");
     let [bio, setBio] = useState(props.user.Bio || "");
 
+    let userMutation = trpc.useMutation("user.updateUserInfo");
+
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        console.log(name, bio);
+        if (name === props.user.name && bio === props.user.Bio) {
+            return;
+        }
+
+        userMutation.mutate({name, bio});
+        
+        if (userMutation.error?.data) {
+            
+        }
+
+        setName("");
+        setBio("");
     }
 
     return (

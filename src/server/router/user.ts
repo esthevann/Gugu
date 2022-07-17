@@ -29,6 +29,28 @@ export const userRouter = createRouter()
             }
         }
     })
+    .mutation("updateUserInfo", {
+        input: z.object({
+            name: z.string().nullish(),
+            bio: z.string().nullish()
+        }),
+        async resolve({ ctx, input }) {
+            let user = ctx.session?.user;
+            if (!user || !user.id) throw new TRPCError({ code: "FORBIDDEN" });
+
+            try {
+                await ctx.prisma.user.update({
+                    where: { id: user.id },
+                    data: { name: input.name || undefined, Bio: input.bio || undefined },
+                });
+            } catch (error) {
+                if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                    if (error.code === 'P2002') throw new TRPCError({ code: "CONFLICT" });
+                }
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+            }
+        }
+    })
     .query("getUserById", {
         input: z.string(),
         async resolve({ ctx, input }){
