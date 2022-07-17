@@ -8,6 +8,7 @@ import Head from "next/head";
 import { Sidebar } from "../../../components/Sidebar";
 import { trpc } from "../../../utils/trpc";
 import EditForm from "../../../components/EditForm";
+import { log } from "console";
 
 interface EditProps {
     user: string;
@@ -57,9 +58,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         }
     }
 
-    const ssg = ssg_helper(session);
+    const ssg = await ssg_helper(session);
 
-    const userOfThePage = await ssg.fetchQuery('user.getUserById', session.user.id);
+    const userOfThePage = await ssg.fetchQuery('user.getUserByHandle', user);
 
     if (!userOfThePage || userOfThePage.handle !== user) {
         return {
@@ -72,6 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
         props: {
+            trpcState: ssg.dehydrate(),
             user
         }
     }

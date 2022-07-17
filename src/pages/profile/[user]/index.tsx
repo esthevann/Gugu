@@ -85,7 +85,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
         props: {
             session,
-            trpc: ssg.dehydrate(),
+            trpcState: ssg.dehydrate(),
         }
     }
 }
