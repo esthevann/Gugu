@@ -3,13 +3,14 @@ import { unstable_getServerSession as getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Rightbar from "../../components/Rightbar";
-import { Sidebar } from "../../components/Sidebar";
-import { trpc } from "../../utils/trpc";
-import { ssg_helper } from '../../utils/ssg-helper';
-import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
-import UserContent from "../../components/UserContent";
-import Spinner from "../../components/Spinner";
+import Rightbar from "../../../components/Rightbar";
+import { Sidebar } from "../../../components/Sidebar";
+import { trpc } from "../../../utils/trpc";
+import { ssg_helper } from '../../../utils/ssg-helper';
+import { authOptions as nextAuthOptions } from "../../api/auth/[...nextauth]";
+import UserContent from "../../../components/UserContent";
+import Spinner from "../../../components/Spinner";
+import UserContentEdit from "../../../components/UserContentEdit";
 
 
 export default function UserPage() {
@@ -24,6 +25,8 @@ export default function UserPage() {
         return null;
     }
 
+    let isMyPage = sessionUserData?.id === pageUserData?.id;
+
     return (
         <>
             <Head>
@@ -36,7 +39,8 @@ export default function UserPage() {
                 <div className='flex flex-grow'>
                     {IsPageDataLoading || IsSessionLoading  && <Spinner />}
                     {sessionUserData && <Sidebar handle={sessionUserData.handle} />}
-                    {pageUserData && <UserContent user={pageUserData} />}
+                    {pageUserData && !isMyPage && <UserContent user={pageUserData} />}
+                    {pageUserData && isMyPage && <UserContentEdit user={pageUserData} />}
                     <Rightbar />
                 </div>
 

@@ -1,5 +1,6 @@
 import { Gugu, User } from "@prisma/client";
 import Image from "next/future/image";
+import Link from "next/link";
 import { Gugus } from "./Gugus";
 
 interface UserContentProps {
@@ -10,7 +11,7 @@ interface UserContentProps {
     },
 }
 
-export default function UserContent(props: UserContentProps) {
+export default function UserContentEdit(props: UserContentProps) {
     return (
         <div className="flex flex-col flex-1 flex-grow pl-12 ">
             <div className="flex items-center justify-center gap-2 p-6">
@@ -19,6 +20,9 @@ export default function UserContent(props: UserContentProps) {
                 <div >
                     <h2 className="text-xl font-bold">{props.user.name} - {props.user.handle}</h2>
                     <p className="w-[52rem] ">{props.user.Bio}</p>
+                    <Link href={`/profile/${props.user.handle}/edit`}>
+                        <a> Edit </a>
+                     </Link>
                 </div>
             </div>
             
