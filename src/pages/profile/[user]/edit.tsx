@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../../api/auth/[...nextauth]";
 import { GetServerSideProps } from "next";
@@ -7,6 +6,8 @@ import { ssg_helper } from '../../../utils/ssg-helper';
 import Spinner from "../../../components/Spinner";
 import Head from "next/head";
 import { Sidebar } from "../../../components/Sidebar";
+import { trpc } from "../../../utils/trpc";
+import EditForm from "../../../components/EditForm";
 
 interface EditProps {
     user: string;
@@ -14,19 +15,21 @@ interface EditProps {
 
 export default function EditUserPage(props: EditProps) {
     let userHandle = props.user;
+    let { data: pageUserData, isLoading: IsPageDataLoading } = trpc.useQuery(["user.getUserByHandle", userHandle]);
     let { data: loggedUserData, status } = useSession({ required: true });
 
     return (
         <>
             <Head>
-                <title>{loggedUserData?.user?.email} - @{userHandle}</title>
+                <title>{loggedUserData?.user?.name} - @{userHandle}</title>
                 <link rel="shortcut icon" href='/favicon.ico?' type="image/x-icon" />
                 <meta name="description" content="Gugu microblogging platform" />
             </Head>
             <div className='flex flex-col min-h-screen'>
                 <div className="flex flex-grow">
-                    {status == "loading" && <Spinner />}
                     <Sidebar handle={userHandle} />
+                    {status == "loading" || IsPageDataLoading && <Spinner />}
+                    {status !== "loading" && pageUserData && <EditForm handle={userHandle} user={pageUserData}  />}         
                 </div>
             </div>
 
