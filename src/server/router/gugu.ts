@@ -14,7 +14,7 @@ export const guguRouter = createRouter()
                     throw new TRPCError({ code: "UNAUTHORIZED" });
                 }
 
-                if (input.text.length > 4){
+                if (input.text.length > 4 || !input.text.length) {
                     throw new TRPCError({ code: "BAD_REQUEST" });
                 }
 
@@ -41,6 +41,30 @@ export const guguRouter = createRouter()
             }
         }
     )
+    .mutation("likeGugu", {
+        input: z.string(),
+        async resolve({ ctx, input }) {
+            if (!ctx.session || !ctx.session.user?.id) {
+                throw new TRPCError({ code: "UNAUTHORIZED" });
+            }
+
+            const query = await ctx.prisma.gugu.update({
+                where: { id: input },
+                data: {
+                   likes: {
+                    connect: {
+                        id: ctx.session.user.id
+                    },
+                   }, 
+                },
+                include: {
+                    likes: true
+                },
+            });
+
+            return query;
+        }
+    })
     .query("listAllGugus", {
         async resolve({ ctx }) {
             let d = await ctx.prisma.gugu.findMany({ include: { user: true } });
