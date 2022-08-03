@@ -1,6 +1,5 @@
 import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
-import { trpc } from "../utils/trpc";
 import Feed from '../components/Feed';
 import Rightbar from '../components/Rightbar';
 import { Sidebar } from '../components/Sidebar';
@@ -10,6 +9,8 @@ import { prisma } from '../server/db/client';
 import { ssg_helper } from '../utils/ssg-helper';
 import { useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
+import { useListAllGugus } from "../hooks/useListAllGugus";
+import { useGetUserById } from "../hooks/useGetUserById";
 
 interface Props {
   session: Session;
@@ -65,8 +66,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
   const session = useSession();
 
-  const { data: gugus, isLoading } = trpc.useQuery(["gugu.listAllGugus"]);
-  const { data: user } = trpc.useQuery(["user.getUserById", session?.data?.user?.id || ""]);
+  const { data: gugus, isLoading } = useListAllGugus();
+  const { data: user } = useGetUserById(session?.data?.user?.id || "");
 
   return (
     <>

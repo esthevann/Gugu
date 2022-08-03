@@ -1,11 +1,11 @@
 import Head from "next/head";
 import { FormEvent, useState } from "react";
-import { trpc } from "../../utils/trpc";
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from "next";
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { prisma } from '../../server/db/client';
+import { useAddHandle } from "../../hooks/useAddHandle";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getServerSession(context.req, context.res, nextAuthOptions);
@@ -46,15 +46,7 @@ export default function NewUser() {
     const [error, setError] = useState("");
     const router = useRouter();
 
-    const addHandleMutation = trpc.useMutation("user.addHandle", {
-        onSuccess: () => {
-            refreshData();
-        }
-    });
-
-    const refreshData = () => {
-        router.replace(router.asPath);
-    }
+    const addHandleMutation = useAddHandle(router);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();

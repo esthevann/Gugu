@@ -6,9 +6,8 @@ import { ssg_helper } from '../../../utils/ssg-helper';
 import Spinner from "../../../components/Spinner";
 import Head from "next/head";
 import { Sidebar } from "../../../components/Sidebar";
-import { trpc } from "../../../utils/trpc";
 import EditForm from "../../../components/EditForm";
-import { log } from "console";
+import { useGetUserByHandle } from "../../../hooks/useGetUserByHandle";
 
 interface EditProps {
     user: string;
@@ -16,7 +15,7 @@ interface EditProps {
 
 export default function EditUserPage(props: EditProps) {
     let userHandle = props.user;
-    let { data: pageUserData, isLoading: IsPageDataLoading } = trpc.useQuery(["user.getUserByHandle", userHandle]);
+    let { data: pageUserData, isLoading: IsPageDataLoading } = useGetUserByHandle(userHandle);
     let { data: loggedUserData, status } = useSession({ required: true });
 
     return (

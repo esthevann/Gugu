@@ -5,12 +5,13 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Rightbar from "../../../components/Rightbar";
 import { Sidebar } from "../../../components/Sidebar";
-import { trpc } from "../../../utils/trpc";
 import { ssg_helper } from '../../../utils/ssg-helper';
 import { authOptions as nextAuthOptions } from "../../api/auth/[...nextauth]";
 import UserContent from "../../../components/UserContent";
 import Spinner from "../../../components/Spinner";
 import UserContentEdit from "../../../components/UserContentEdit";
+import { useGetUserByHandle } from "../../../hooks/useGetUserByHandle";
+import { useGetUserById } from "../../../hooks/useGetUserById";
 
 
 export default function UserPage() {
@@ -18,8 +19,8 @@ export default function UserPage() {
 
     const { user } = useRouter().query as { user: string };
 
-    const { data: pageUserData, isLoading: IsPageDataLoading } = trpc.useQuery(["user.getUserByHandle", user]);
-    const { data: sessionUserData, isLoading: IsSessionLoading } = trpc.useQuery(["user.getUserById", session?.data?.user?.id || ""]);
+    const { data: pageUserData, isLoading: IsPageDataLoading } = useGetUserByHandle(user);
+    const { data: sessionUserData, isLoading: IsSessionLoading } = useGetUserById(session?.data?.user?.id || "");;
 
     if (!pageUserData) {
         return null;

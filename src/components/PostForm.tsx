@@ -2,15 +2,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/future/image";
 import { FormEvent, useState } from "react";
 import gugu from "../../public/gugu.png";
-import { trpc } from "../utils/trpc";
+import { useCreateGugu } from "../hooks/useCreateGugu";
 
 export function PostForm() {
     const [text, setText] = useState("");
-    const utils = trpc.useContext();
-    const guguMutation = trpc.useMutation("gugu.createGugu", {onSuccess: (data) => {
-        console.log(data);  
-        utils.invalidateQueries("gugu.listAllGugus");
-    }})
+
+    const guguMutation = useCreateGugu();
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         guguMutation.mutate({ text });
