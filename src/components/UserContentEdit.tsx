@@ -7,7 +7,9 @@ interface UserContentProps {
     user: User & {
         Gugu: (Gugu & {
             user: User;
+            likes: User[];
         })[];
+        GugusLiked: (Gugu & { likes: User[]; })[];
     },
 }
 
@@ -26,7 +28,7 @@ export default function UserContentEdit(props: UserContentProps) {
                 </div>
             </div>
             
-            <Gugus gugus={props.user.Gugu}/>
+            <Gugus gugus={props.user.Gugu} likedList={props.user.GugusLiked}/>
         </div>
     )
 }

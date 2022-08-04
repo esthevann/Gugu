@@ -7,7 +7,9 @@ import { Prisma } from "@prisma/client";
 export type UserWithGugus = (User & {
     Gugu: (Gugu & {
         user: User;
+        likes: User[];
     })[];
+    likedList: (Gugu & { likes: User[]; })[];
 }) | null
 
 export const userRouter = createRouter()
@@ -59,7 +61,7 @@ export const userRouter = createRouter()
             let user = await ctx.prisma.user.findUnique({ where: { id: input }, 
                 include: {
                      Gugu: true,
-                     GugusLiked: { include: { likes: true } } 
+                     GugusLiked: { include: { likes: true, user: true } } 
                     }});
             return user
         }
@@ -74,14 +76,16 @@ export const userRouter = createRouter()
     .query("getUserByHandle", {
         input: z.string(),
         async resolve({ ctx, input }) {
-            let user: UserWithGugus | null = await ctx.prisma.user.findUnique({
+            let user = await ctx.prisma.user.findUnique({
                 where: { handle: input },
                 include: {
                     Gugu: {
                         include: {
-                            user: true
+                            user: true,
+                            likes: true
                         }
-                    }
+                    },
+                    GugusLiked: { include: { likes: true } }
                 }
             });
             return user
