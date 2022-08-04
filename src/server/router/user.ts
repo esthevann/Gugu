@@ -4,9 +4,11 @@ import { TRPCError } from "@trpc/server";
 import type { Gugu, User } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
-export type UserWithGugus = (User & { Gugu: (Gugu & {
-    user: User;
-})[]; }) | null
+export type UserWithGugus = (User & {
+    Gugu: (Gugu & {
+        user: User;
+    })[];
+}) | null
 
 export const userRouter = createRouter()
     .mutation("addHandle", {
@@ -53,15 +55,19 @@ export const userRouter = createRouter()
     })
     .query("getUserById", {
         input: z.string(),
-        async resolve({ ctx, input }){
-            let user = await ctx.prisma.user.findUnique({ where: { id: input }, include: { Gugu: true } })
+        async resolve({ ctx, input }) {
+            let user = await ctx.prisma.user.findUnique({ where: { id: input }, 
+                include: {
+                     Gugu: true,
+                     GugusLiked: { include: { likes: true } } 
+                    }});
             return user
         }
     })
     .query("getUserByEmail", {
         input: z.string(),
         async resolve({ ctx, input }) {
-            let user = await ctx.prisma.user.findUnique({ where: { email: input }, include: { Gugu: true } })
+            let user = await ctx.prisma.user.findUnique({ where: { email: input }, include: { Gugu: true, } })
             return user
         }
     })

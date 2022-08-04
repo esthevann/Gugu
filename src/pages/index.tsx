@@ -67,7 +67,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   const session = useSession();
 
   const { data: gugus, isLoading } = useListAllGugus();
-  const { data: user } = useGetUserById(session?.data?.user?.id || "");
+  const { data: user, isLoading: isUserLoading } = useGetUserById(session?.data?.user?.id || "");
 
   return (
     <>
@@ -80,8 +80,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
         <div className='flex flex-grow h-full '>
           <Sidebar handle={user?.handle} />
-          {isLoading && <Spinner />}
-          {gugus && <Feed gugus={gugus} />}
+          {isLoading || isUserLoading && <Spinner />}
+          {gugus && user && <Feed gugus={gugus} likedList={user.GugusLiked} />}
           <Rightbar />
         </div>
 

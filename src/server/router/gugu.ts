@@ -58,6 +58,7 @@ export const guguRouter = createRouter()
                    }, 
                 },
                 include: {
+                    user: true,
                     likes: true
                 },
             });
@@ -67,7 +68,7 @@ export const guguRouter = createRouter()
     })
     .query("listAllGugus", {
         async resolve({ ctx }) {
-            let d = await ctx.prisma.gugu.findMany({ include: { user: true } });
+            let d = await ctx.prisma.gugu.findMany({ include: { user: true, likes: true } });
             return d
         }
     })

@@ -9,7 +9,11 @@ import { Gugus } from "./Gugus";
 export interface FeedProps {
     gugus: (GuguType & {
         user: User;
+        likes: User[];
     })[] | undefined,
+    likedList: (GuguType & {
+        likes: User[];
+    })[];
 }
 
 
@@ -23,7 +27,7 @@ export default function Feed(props: FeedProps) {
             </div>
             <h2 className="text-xl font-bold">Gugus mais recentes</h2>
             <div className="pb-6"></div>
-            <Gugus gugus={props.gugus}/>
+            <Gugus gugus={props.gugus} likedList={props.likedList}/>
 
         </div>
     )

@@ -52,7 +52,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     Gugu          Gugu[]
-    GugusLiked    Gugu?     @relation(references: [id], name: "likes", fields: [guguId])
+    GugusLiked    Gugu[]    @relation("likes")
     Bio           String    @default("")
     guguId        String?
 }
