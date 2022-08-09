@@ -18,16 +18,31 @@ interface GuguProps {
 }
 
 export function Gugu(props: GuguProps) {
-    const date = format(props.createdAt, 'dd/MM/yyyy')
+    const [isLiked, setIsLiked] = React.useState(props.isLiked);
+    const [likes, setLikes] = React.useState(props.likes.length);
+    const date = format(props.createdAt, 'dd/MM/yyyy');
     const client = trpc.useContext();
     const liker = trpc.useMutation("gugu.likeGugu");
+    const unliker = trpc.useMutation("gugu.unlikeGugu");
     const likeGugu: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
-        liker.mutate(props.id, {
-            onSuccess() {
-                client.invalidateQueries("gugu.listAllGugus");
-            },
-        });
+        if (!isLiked) {
+            setLikes((prev) => prev + 1);
+            setIsLiked(!isLiked);
+            liker.mutate(props.id, {
+                onSuccess() {
+                    client.invalidateQueries("gugu.listAllGugus");
+                },
+            });
+        } else {
+            setLikes((prev) => prev - 1);
+            setIsLiked(!isLiked);
+            unliker.mutate(props.id, {
+                onSuccess() {
+                    client.invalidateQueries("gugu.listAllGugus");
+                },
+            });
+        }
     }
     return (
         <div className="px-6 py-3 border border-gray-500 rounded-md w-96 max-w-[24rem] max-h-fit">
@@ -53,9 +68,9 @@ export function Gugu(props: GuguProps) {
             <div className="flex justify-end">
                 <div className="flex gap-1">
                     <button onClick={likeGugu}>
-                        {props.isLiked ? <HeartStraight size={24} weight="fill" /> : <HeartStraight size={24} />}
+                        {isLiked ? <HeartStraight size={24} weight="fill" /> : <HeartStraight size={24} />}
                     </button>
-                    <p>{props.likes.length}</p>
+                    <p>{likes}</p>
                 </div>
 
             </div>

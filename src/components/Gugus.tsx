@@ -6,7 +6,7 @@ export function Gugus(props: FeedProps) {
 
     return <div className="flex flex-col items-center gap-1">
         {props.gugus && props.gugus.map(function (gugu){
-            let user = props.likedList.find((a) => { console.log(a.id, gugu.id); return a.id === gugu.id; });
+            let user = props.likedList.find((a) => { return a.id === gugu.id; });
             let isLiked = user ? true : false;
             return <Gugu
                 id={gugu.id}

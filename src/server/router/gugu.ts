@@ -66,6 +66,30 @@ export const guguRouter = createRouter()
             return query;
         }
     })
+    .mutation("unlikeGugu", {
+        input: z.string(),
+        async resolve({ ctx, input }) {
+            if (!ctx.session || !ctx.session.user?.id) {
+                throw new TRPCError({ code: "UNAUTHORIZED" });
+            }
+
+            const query = await ctx.prisma.gugu.update({
+                where: { id: input },
+                data: {
+                   likes: {
+                    disconnect: {
+                        id: ctx.session.user.id
+                    },
+                   }, 
+                },
+                include: {
+                    user: true,
+                    likes: true
+                },
+            });
+            return query;
+        }
+    })
     .query("listAllGugus", {
         async resolve({ ctx }) {
             let d = await ctx.prisma.gugu.findMany({ include: { user: true, likes: true } });

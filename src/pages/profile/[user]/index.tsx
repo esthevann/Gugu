@@ -74,15 +74,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const ssg = ssg_helper(session);
 
     let user_data = await ssg.fetchQuery('user.getUserByHandle', user as string);
-    console.log(user_data);
-    
+
     
     if (!user_data) {
         return {
             notFound: true
         }
     }
-    console.log(2);
+
     return {
         props: {
             session,
