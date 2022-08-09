@@ -1,7 +1,7 @@
 import { createRouter } from "./context";
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
-import { Prisma } from "@prisma/client";
+import { Gugu, Prisma } from "@prisma/client";
 
 export const guguRouter = createRouter()
     .mutation("createGugu",
@@ -20,10 +20,9 @@ export const guguRouter = createRouter()
 
                 const userSelection = Prisma.validator<Prisma.UserSelect>()({
                     id: true,
-                    Gugu: true
                 });
 
-                let user = await ctx.prisma.user.update({
+                let user: { id: string; } = await ctx.prisma.user.update({
                     where: {
                         email: ctx.session.user.email!
                     },
@@ -48,22 +47,19 @@ export const guguRouter = createRouter()
                 throw new TRPCError({ code: "UNAUTHORIZED" });
             }
 
-            const query = await ctx.prisma.gugu.update({
+            await ctx.prisma.gugu.update({
                 where: { id: input },
                 data: {
-                   likes: {
-                    connect: {
-                        id: ctx.session.user.id
+                    likes: {
+                        connect: {
+                            id: ctx.session.user.id
+                        },
                     },
-                   }, 
                 },
-                include: {
-                    user: true,
-                    likes: true
-                },
+                select: {
+                    id: true,
+                }
             });
-
-            return query;
         }
     })
     .mutation("unlikeGugu", {
@@ -72,27 +68,51 @@ export const guguRouter = createRouter()
             if (!ctx.session || !ctx.session.user?.id) {
                 throw new TRPCError({ code: "UNAUTHORIZED" });
             }
-
-            const query = await ctx.prisma.gugu.update({
+            await ctx.prisma.gugu.update({
                 where: { id: input },
                 data: {
-                   likes: {
-                    disconnect: {
-                        id: ctx.session.user.id
+                    likes: {
+                        disconnect: {
+                            id: ctx.session.user.id
+                        },
                     },
-                   }, 
                 },
-                include: {
-                    user: true,
-                    likes: true
-                },
+                select: {
+                    id: true,
+                }
             });
-            return query;
         }
     })
     .query("listAllGugus", {
         async resolve({ ctx }) {
-            let d = await ctx.prisma.gugu.findMany({ include: { user: true, likes: true } });
-            return d
+            let d = await ctx.prisma.gugu.findMany({
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            handle: true,
+                            image: true,
+                        }
+                    },
+                    likes: {
+                        select: {
+                            _count: true
+                        }
+                    }
+                }
+            });
+            let obj = d.map((gugu) => {
+                return {
+                    id: gugu.id,
+                    content: gugu.content,
+                    createdAt: gugu.createdAt,
+                    userId: gugu.userId,
+                    user: gugu.user,
+                    likes: gugu.likes.length
+                }
+            })
+            return obj;
         }
     })

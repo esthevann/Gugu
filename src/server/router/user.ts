@@ -60,7 +60,20 @@ export const userRouter = createRouter()
         async resolve({ ctx, input }) {
             let user = await ctx.prisma.user.findUnique({ where: { id: input }, 
                 include: {
-                     Gugu: true,
+                     Gugu: {
+                        select: {
+                            id: true,
+                            createdAt: true,
+                            content: true,
+                            userId: true,
+                            likes: true,
+                            user: {
+                                include: {
+                                    GugusLiked: true
+                                }
+                            },
+                        }
+                     },
                      GugusLiked: { include: { likes: true, user: true } } 
                     }});
             return user

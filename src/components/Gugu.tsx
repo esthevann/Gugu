@@ -13,13 +13,13 @@ interface GuguProps {
     createdAt: Date,
     name: string,
     handle: string,
-    likes: User[]
+    likes: number
     isLiked: boolean
 }
 
 export function Gugu(props: GuguProps) {
     const [isLiked, setIsLiked] = React.useState(props.isLiked);
-    const [likes, setLikes] = React.useState(props.likes.length);
+    const [likes, setLikes] = React.useState(props.likes);
     const date = format(props.createdAt, 'dd/MM/yyyy');
     const client = trpc.useContext();
     const liker = trpc.useMutation("gugu.likeGugu");

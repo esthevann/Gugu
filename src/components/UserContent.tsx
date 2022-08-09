@@ -13,6 +13,21 @@ interface UserContentProps {
 }
 
 export default function UserContent(props: UserContentProps) {
+    const gugusCorrectShape = props.user.Gugu.map((gugu) => {
+        return {
+            id: gugu.id,
+            content: gugu.content,
+            createdAt: gugu.createdAt,
+            likes: gugu.likes.length,
+            userId: gugu.userId,
+            user: {
+                id: gugu.user.id,
+                name: gugu.user.name,
+                handle: gugu.user.handle,
+                image: gugu.user.image,
+            }
+        }
+    });
     return (
         <div className="flex flex-col flex-1 flex-grow pl-12 ">
             <div className="flex items-center justify-center gap-2 p-6">
@@ -24,7 +39,7 @@ export default function UserContent(props: UserContentProps) {
                 </div>
             </div>
             
-            <Gugus gugus={props.user.Gugu} likedList={props.user.GugusLiked} />
+            <Gugus gugus={gugusCorrectShape} likedList={props.user.GugusLiked} />
         </div>
     )
 }

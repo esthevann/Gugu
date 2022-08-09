@@ -8,8 +8,13 @@ import { Gugus } from "./Gugus";
 
 export interface FeedProps {
     gugus: (GuguType & {
-        user: User;
-        likes: User[];
+        user: {
+            id: string;
+            name: string | null;
+            handle: string | null;
+            image: string | null;
+        };
+        likes: number;
     })[] | undefined,
     likedList: (GuguType & {
         likes: User[];

@@ -20,7 +20,8 @@ export default function UserPage() {
     const { user } = useRouter().query as { user: string };
 
     const { data: pageUserData, isLoading: IsPageDataLoading } = useGetUserByHandle(user);
-    const { data: sessionUserData, isLoading: IsSessionLoading } = useGetUserById(session?.data?.user?.id || "");;
+    const { data: sessionUserData, isLoading: IsSessionLoading } = useGetUserById(session?.data?.user?.id || "");
+
 
     if (!pageUserData) {
         return null;
@@ -40,7 +41,10 @@ export default function UserPage() {
                 <div className='flex flex-grow'>
                     {IsPageDataLoading || IsSessionLoading  && <Spinner />}
                     {sessionUserData && <Sidebar handle={sessionUserData.handle} />}
-                    {pageUserData && !isMyPage && <UserContent user={pageUserData} />}
+                    {pageUserData && sessionUserData && !isMyPage && (
+
+                    <UserContent user={pageUserData} />
+                    )}
                     {pageUserData && isMyPage && <UserContentEdit user={pageUserData} />}
                     <Rightbar />
                 </div>
